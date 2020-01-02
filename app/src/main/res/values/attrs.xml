@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="ExpandableTextView">
+        <attr name="etv_animationDuration" format="integer" />
+        <attr name="etv_collapsedLines" format="integer" />
+        <attr name="etv_expandedLines" format="integer" />
+        <attr name="etv_ellipsize_text" format="string" />
+    </declare-styleable>
+</resources>
