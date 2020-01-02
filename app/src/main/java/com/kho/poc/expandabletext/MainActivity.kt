@@ -46,10 +46,30 @@ class MainActivity : AppCompatActivity() {
 
 
     class ExpandTextListAdapter : RecyclerView.Adapter<ExpandViewHolder> {
-        lateinit var items: HashMap<Int, ExpandableTextView.State2>
+        private val items: HashMap<Int, ExpandableTextView.State2> = HashMap()
+        private val fake = arrayListOf<ExpandableTextView.State2>(
+            ExpandableTextView.State2.Static,
+            ExpandableTextView.State2.Static,
+            ExpandableTextView.State2.Static,
+            ExpandableTextView.State2.Static,
+            ExpandableTextView.State2.Static,
+            ExpandableTextView.State2.Static,
+            ExpandableTextView.State2.Static,
+            ExpandableTextView.State2.Static,
+            ExpandableTextView.State2.Static,
+            ExpandableTextView.State2.Static,
+            ExpandableTextView.State2.Static,
+            ExpandableTextView.State2.Static,
+            ExpandableTextView.State2.Static,
+            ExpandableTextView.State2.Static,
+            ExpandableTextView.State2.Static,
+            ExpandableTextView.State2.Static,
+            ExpandableTextView.State2.Static,
+            ExpandableTextView.State2.Static
+        )
 
         constructor() {
-            items = HashMap<Int, ExpandableTextView.State2>()
+            items[0] = ExpandableTextView.State2.Static
             items[1] = ExpandableTextView.State2.Static
             items[2] = ExpandableTextView.State2.Static
             items[3] = ExpandableTextView.State2.Static
@@ -64,15 +84,17 @@ class MainActivity : AppCompatActivity() {
             items[12] = ExpandableTextView.State2.Static
             items[13] = ExpandableTextView.State2.Static
             items[14] = ExpandableTextView.State2.Static
-            items[154] = ExpandableTextView.State2.Static
-            items[152] = ExpandableTextView.State2.Static
-            items[155] = ExpandableTextView.State2.Static
-            items[157] = ExpandableTextView.State2.Static
-            items[151] = ExpandableTextView.State2.Static
-
+            items[15] = ExpandableTextView.State2.Static
+            items[16] = ExpandableTextView.State2.Static
+            items[17] = ExpandableTextView.State2.Static
+            items[18] = ExpandableTextView.State2.Static
+            items[19] = ExpandableTextView.State2.Static
+            items[20] = ExpandableTextView.State2.Static
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExpandViewHolder {
+
+
             return ExpandViewHolder(
                 LayoutInflater.from(parent.context)
                     .inflate(
@@ -83,12 +105,15 @@ class MainActivity : AppCompatActivity() {
             )
         }
 
-        override fun getItemCount() = items.size
+        override fun getItemCount() = fake.size
 
         override fun onBindViewHolder(holder: ExpandViewHolder, position: Int) {
-            items[position]?.let {
-                Log.d("ExpandableTextView",position.toString())
-                holder.bindPosition(it)
+            Log.d("dfdfdf", "Binding:${position} and ${fake[position]}")
+//            fake[position].let {
+                holder.bindPosition(position,fake[position]) { state, postion ->
+                    Log.d("dfdfdfdf", "onUpdate:${state.name},${position}")
+                    fake[postion] = state
+//                }
             }
         }
 
@@ -98,9 +123,18 @@ class MainActivity : AppCompatActivity() {
 
         val expText = iv.expText
 
-        fun bindPosition(state2: ExpandableTextView.State2) {
-//            expText.text = iv.context.getString(R.string.lorem_text)
-//            expText.state = state2
+        fun bindPosition(
+            position: Int,
+            state2: ExpandableTextView.State2,
+            onUpdate: (newState: ExpandableTextView.State2, position: Int) -> Unit
+        ) {
+            Log.d("dfdfdf","in:${position}")
+            expText.onStateChangeListener = { oldState2, newState2 ->
+                onUpdate.invoke(newState2, position)
+            }
+//            if (state2!=ExpandableTextView.State2.Expanded){
+                expText.state = state2
+//            }
         }
     }
 }

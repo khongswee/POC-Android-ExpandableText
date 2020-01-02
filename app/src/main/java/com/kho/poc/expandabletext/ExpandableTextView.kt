@@ -20,7 +20,7 @@ class ExpandableTextView : AppCompatTextView {
     }
 
 
-    protected var onStateChangeListener: (ExpandableTextView.(oldState2: State2, newState2: State2) -> Unit)? =
+     var onStateChangeListener: (ExpandableTextView.(oldState2: State2, newState2: State2) -> Unit)? =
         null
 
     private val allText: String by lazy { text.toString() }
@@ -31,13 +31,14 @@ class ExpandableTextView : AppCompatTextView {
 
     /** Current [State2] of this [ExpandableTextView]. Read-only property. [Static] by default. */
     var state = State2.Static
-         set(value) {
+        set(value) {
             if (field != value) {
                 Log.d("ExpandableTextView", "$field -> $value")
                 onStateChangeListener?.let { it(field, value) }
                 field = value
-                checkState()
             }
+            checkState()
+
         }
 
     constructor(context: Context) : super(context) {
@@ -72,7 +73,7 @@ class ExpandableTextView : AppCompatTextView {
             suffixInit =
                 getString(R.styleable.ExpandableTextView_etv_ellipsize_text) ?: DEFAULT_SUFFIX_TEXT
 //            setEllipsizedSuffix(maxLines, suffixInit)
-            checkState()
+//            checkState()
         }.recycle()
     }
 
@@ -118,24 +119,24 @@ class ExpandableTextView : AppCompatTextView {
 
     val listenerClick = object : ClickableSpan() {
         override fun onClick(p0: View) {
+            Log.d("ExpandableTextView", "click:${state}")
             when (state) {
                 State2.Static, State2.Collapsing -> {
-//                    maxLines = Int.MAX_VALUE
-//                    text = allText
                     state = State2.Expanded
-//                    collap()
                 }
                 State2.Expanded -> {
-//                    maxLines = maxLinesInit
-//                    setEllipsizedSuffix(maxLines, suffixInit)
                     state = State2.Collapsing
+                }
+                else -> {
 
                 }
             }
         }
     }
 
-    private fun checkState() {
+    fun checkState() {
+        Log.d("ExpandableTextView", "checkState:${state}")
+
         when (state) {
             State2.Static, State2.Collapsing -> {
                 maxLines = maxLinesInit
@@ -146,7 +147,7 @@ class ExpandableTextView : AppCompatTextView {
                 text = allText
                 collap()
             }
-            State2.Expanding->{
+            State2.Expanding -> {
                 maxLines = Int.MAX_VALUE
                 text = allText
                 collap()
@@ -163,7 +164,8 @@ class ExpandableTextView : AppCompatTextView {
         val newText = allText + collapText
         val spannable = SpannableString(newText)
         text = null
-        Log.d("ExpandableTextView","collap--${newText}")
+
+        Log.d("ExpandableTextView", "collap--${newText}")
 
         spannable.setSpan(
             listenerClick,
